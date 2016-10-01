@@ -27,5 +27,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-    compile project(path: ':recyclertreeview-lib')
+//    compile project(path: ':recyclertreeview-lib')
+    compile 'com.github.TellH:RecyclerTreeView:1.0.0'
 }
