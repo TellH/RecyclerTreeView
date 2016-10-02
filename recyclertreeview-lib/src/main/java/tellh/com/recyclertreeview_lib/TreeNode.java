@@ -75,9 +75,9 @@ public class TreeNode<T extends LayoutItemType> {
     @Override
     public String toString() {
         return "TreeNode{" +
-                "content=" + content +
-                ", parent=" + parent.getContent() +
-                ", childList=" + childList +
+                "content=" + this.content +
+                ", parent=" + (parent == null ? "null" : parent.getContent().toString()) +
+                ", childList=" + (childList == null ? "null" : childList.toString()) +
                 ", isExpand=" + isExpand +
                 '}';
     }
