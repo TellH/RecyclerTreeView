@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         );
         rv.setLayoutManager(new LinearLayoutManager(this));
         TreeViewAdapter adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
+//        adapter.ifCollapseChildWhileCollapseParent(true);
         adapter.setOnTreeNodeClickListener(new TreeViewAdapter.OnTreeNodeClickListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {

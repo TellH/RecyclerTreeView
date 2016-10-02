@@ -16,6 +16,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<TreeNode> displayNodes;
     private int padding = 30;
     private OnTreeNodeClickListener onTreeNodeClickListener;
+    private boolean toCollapseChild;
 
     public TreeViewAdapter(List<TreeNode> nodes, List<? extends TreeViewBinder> viewBinders) {
         displayNodes = new ArrayList<>();
@@ -62,8 +63,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return;
                 boolean isExpand = selectedNode.toggle();
                 if (isExpand) {
-                    displayNodes.addAll(holder.getLayoutPosition() + 1, selectedNode.getChildList());
-                    notifyItemRangeInserted(holder.getLayoutPosition() + 1, selectedNode.getChildList().size());
+                    notifyItemRangeInserted(holder.getLayoutPosition() + 1, addChildNodes(selectedNode, holder.getLayoutPosition() + 1));
                 } else {
                     notifyItemRangeRemoved(holder.getLayoutPosition() + 1, removeChildNodes(selectedNode));
                 }
@@ -75,6 +75,18 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    private int addChildNodes(TreeNode pNode, int startIndex) {
+        List<TreeNode> childList = pNode.getChildList();
+        int addChildCount = 0;
+        for (TreeNode treeNode : childList) {
+            displayNodes.add(startIndex + addChildCount++, treeNode);
+            if (treeNode.isExpand()) {
+                addChildCount += addChildNodes(treeNode, startIndex + addChildCount);
+            }
+        }
+        return addChildCount;
+    }
+
     private int removeChildNodes(TreeNode pNode) {
         if (pNode.isLeaf())
             return 0;
@@ -83,7 +95,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         displayNodes.removeAll(childList);
         for (TreeNode treeNode : childList) {
             if (treeNode.isExpand()) {
-                treeNode.toggle();
+                if (toCollapseChild)
+                    treeNode.toggle();
                 removeChildCount += removeChildNodes(treeNode);
             }
         }
@@ -97,6 +110,10 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setPadding(int padding) {
         this.padding = padding;
+    }
+
+    public void ifCollapseChildWhileCollapseParent(boolean toCollapseChild) {
+        this.toCollapseChild = toCollapseChild;
     }
 
     public void setOnTreeNodeClickListener(OnTreeNodeClickListener onTreeNodeClickListener) {
