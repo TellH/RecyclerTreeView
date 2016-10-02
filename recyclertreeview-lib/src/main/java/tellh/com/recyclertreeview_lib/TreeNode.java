@@ -71,4 +71,14 @@ public class TreeNode<T extends LayoutItemType> {
     public boolean isExpand() {
         return isExpand;
     }
+
+    @Override
+    public String toString() {
+        return "TreeNode{" +
+                "content=" + content +
+                ", parent=" + parent.getContent() +
+                ", childList=" + childList +
+                ", isExpand=" + isExpand +
+                '}';
+    }
 }
