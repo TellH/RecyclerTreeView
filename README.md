@@ -18,7 +18,7 @@ allprojects {
 app build.gradle
 ```
 dependencies {
-    compile 'com.github.TellH:RecyclerTreeView:1.0.0'
+    compile 'com.github.TellH:RecyclerTreeView:1.1.1'
 }
 ```
 Please check out the Demo for more information.
