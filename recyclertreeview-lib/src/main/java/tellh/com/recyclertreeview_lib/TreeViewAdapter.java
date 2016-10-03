@@ -18,9 +18,14 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private OnTreeNodeClickListener onTreeNodeClickListener;
     private boolean toCollapseChild;
 
+    public TreeViewAdapter(List<? extends TreeViewBinder> viewBinders) {
+        this(null, viewBinders);
+    }
+
     public TreeViewAdapter(List<TreeNode> nodes, List<? extends TreeViewBinder> viewBinders) {
         displayNodes = new ArrayList<>();
-        findDisplayNodes(nodes);
+        if (nodes != null)
+            findDisplayNodes(nodes);
         this.viewBinders = viewBinders;
     }
 
@@ -125,5 +130,11 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @return weather consume the click event.
          */
         boolean onClick(TreeNode node, RecyclerView.ViewHolder holder);
+    }
+
+    public void refresh(List<TreeNode> treeNodes) {
+        displayNodes.clear();
+        findDisplayNodes(treeNodes);
+        notifyDataSetChanged();
     }
 }
