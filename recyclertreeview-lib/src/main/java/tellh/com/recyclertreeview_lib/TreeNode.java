@@ -72,6 +72,10 @@ public class TreeNode<T extends LayoutItemType> {
         return isExpand;
     }
 
+    public void setParent(TreeNode parent) {
+        this.parent = parent;
+    }
+
     @Override
     public String toString() {
         return "TreeNode{" +
