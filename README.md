@@ -80,7 +80,7 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
 
 
 
-- Add Child to TreeViewAdapter.
+- Add TreeNode to TreeViewAdapter.
 
 ```java
         List<TreeNode> nodes = new ArrayList<>();
