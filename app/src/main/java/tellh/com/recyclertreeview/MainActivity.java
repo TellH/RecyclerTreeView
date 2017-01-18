@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rv;
+    private TreeViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,27 +67,25 @@ public class MainActivity extends AppCompatActivity {
                         .addChild(new TreeNode<>(new File("ic_launcher.png")))
         );
         rv.setLayoutManager(new LinearLayoutManager(this));
-        TreeViewAdapter adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
-//        adapter.ifCollapseChildWhileCollapseParent(true);
-        adapter.setOnTreeNodeClickListener(new TreeViewAdapter.OnTreeNodeClickListener() {
+        adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
+        // whether collapse child nodes when their parent node was close.
+        adapter.ifCollapseChildWhileCollapseParent(true);
+        adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
-                if (node.isLeaf())
-                    return false;
-                try {
-                    long lastClickTime = (long) holder.itemView.getTag();
-                    if (System.currentTimeMillis() - lastClickTime < 500)
-                        return true;
-                } catch (Exception e) {
-                    holder.itemView.setTag(System.currentTimeMillis());
-                }
-                holder.itemView.setTag(System.currentTimeMillis());
+                if (!node.isLeaf())
+                    //Update and toggle the node.
+                    onToggle(!node.isExpand(), holder);
+                return false;
+            }
+
+            @Override
+            public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
                 DirectoryNodeBinder.ViewHolder dirViewHolder = (DirectoryNodeBinder.ViewHolder) holder;
                 final ImageView ivArrow = dirViewHolder.getIvArrow();
-                int rotateDegree = node.isExpand() ? -90 : 90;
+                int rotateDegree = isExpand ? 90 : -90;
                 ivArrow.animate().rotationBy(rotateDegree)
                         .start();
-                return false;
             }
         });
         rv.setAdapter(adapter);
@@ -93,4 +94,25 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         rv = (RecyclerView) findViewById(R.id.rv);
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.id_action_close_all:
+                adapter.closeAll();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

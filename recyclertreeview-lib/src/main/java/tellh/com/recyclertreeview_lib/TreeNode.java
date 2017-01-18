@@ -9,7 +9,7 @@ import java.util.List;
  * Created by tlh on 2016/10/1 :)
  */
 
-public class TreeNode<T extends LayoutItemType> {
+public class TreeNode<T extends LayoutItemType> implements Cloneable {
     private T content;
     private TreeNode parent;
     private List<TreeNode> childList;
@@ -84,5 +84,12 @@ public class TreeNode<T extends LayoutItemType> {
                 ", childList=" + (childList == null ? "null" : childList.toString()) +
                 ", isExpand=" + isExpand +
                 '}';
+    }
+
+    @Override
+    protected TreeNode<T> clone() throws CloneNotSupportedException {
+        TreeNode<T> clone = new TreeNode<>(this.content);
+        clone.isExpand = this.isExpand;
+        return clone;
     }
 }
