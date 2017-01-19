@@ -86,6 +86,10 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
         this.parent = parent;
     }
 
+    public TreeNode getParent() {
+        return parent;
+    }
+
     @Override
     public String toString() {
         return "TreeNode{" +

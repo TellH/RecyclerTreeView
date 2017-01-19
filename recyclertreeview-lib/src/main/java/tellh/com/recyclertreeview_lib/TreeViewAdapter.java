@@ -1,6 +1,7 @@
 package tellh.com.recyclertreeview_lib;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -103,10 +104,11 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (selectedNode.isLeaf())
                     return;
                 boolean isExpand = selectedNode.isExpand();
+                int positionStart = displayNodes.indexOf(selectedNode) + 1;
                 if (!isExpand) {
-                    notifyItemRangeInserted(holder.getLayoutPosition() + 1, addChildNodes(selectedNode, holder.getLayoutPosition() + 1));
+                    notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
                 } else {
-                    notifyItemRangeRemoved(holder.getLayoutPosition() + 1, removeChildNodes(selectedNode, true));
+                    notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
                 }
             }
         });
@@ -241,18 +243,11 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
-     * Close all root nodes.
+     * collapse all root nodes.
      */
-    public void closeAll() {
+    public void collapseAll() {
         // Back up the nodes are displaying.
-        List<TreeNode> temp = new ArrayList<>();
-        for (TreeNode displayNode : displayNodes) {
-            try {
-                temp.add(displayNode.clone());
-            } catch (CloneNotSupportedException e) {
-                temp.add(displayNode);
-            }
-        }
+        List<TreeNode> temp = backupDisplayNodes();
         //find all root nodes.
         List<TreeNode> roots = new ArrayList<>();
         for (TreeNode displayNode : displayNodes) {
@@ -266,4 +261,51 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         notifyDiff(temp);
     }
+
+    @NonNull
+    private List<TreeNode> backupDisplayNodes() {
+        List<TreeNode> temp = new ArrayList<>();
+        for (TreeNode displayNode : displayNodes) {
+            try {
+                temp.add(displayNode.clone());
+            } catch (CloneNotSupportedException e) {
+                temp.add(displayNode);
+            }
+        }
+        return temp;
+    }
+
+    public void collapseNode(TreeNode pNode) {
+        List<TreeNode> temp = backupDisplayNodes();
+        removeChildNodes(pNode);
+        notifyDiff(temp);
+    }
+
+    public void collapseBrotherNode(TreeNode pNode) {
+        List<TreeNode> temp = backupDisplayNodes();
+        if (pNode.isRoot()) {
+            List<TreeNode> roots = new ArrayList<>();
+            for (TreeNode displayNode : displayNodes) {
+                if (displayNode.isRoot())
+                    roots.add(displayNode);
+            }
+            //Close all root nodes.
+            for (TreeNode root : roots) {
+                if (root.isExpand() && !root.equals(pNode))
+                    removeChildNodes(root);
+            }
+        } else {
+            TreeNode parent = pNode.getParent();
+            if (parent == null)
+                return;
+            List<TreeNode> childList = parent.getChildList();
+            for (TreeNode node : childList) {
+                if (node.equals(pNode) || !node.isExpand())
+                    continue;
+                removeChildNodes(node);
+            }
+        }
+        notifyDiff(temp);
+    }
+
 }

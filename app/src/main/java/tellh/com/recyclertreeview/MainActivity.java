@@ -73,9 +73,12 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
-                if (!node.isLeaf())
+                if (!node.isLeaf()) {
                     //Update and toggle the node.
                     onToggle(!node.isExpand(), holder);
+                    if (!node.isExpand())
+                        adapter.collapseBrotherNode(node);
+                }
                 return false;
             }
 
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.id_action_close_all:
-                adapter.closeAll();
+                adapter.collapseAll();
                 break;
             default:
                 break;
