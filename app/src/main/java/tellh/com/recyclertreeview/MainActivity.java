@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!node.isLeaf()) {
                     //Update and toggle the node.
                     onToggle(!node.isExpand(), holder);
-                    if (!node.isExpand())
-                        adapter.collapseBrotherNode(node);
+//                    if (!node.isExpand())
+//                        adapter.collapseBrotherNode(node);
                 }
                 return false;
             }

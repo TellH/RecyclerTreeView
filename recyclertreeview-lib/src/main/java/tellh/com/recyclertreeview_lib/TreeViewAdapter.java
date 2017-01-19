@@ -173,10 +173,15 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public interface OnTreeNodeListener {
         /**
+         * called when TreeNodes were clicked.
          * @return weather consume the click event.
          */
         boolean onClick(TreeNode node, RecyclerView.ViewHolder holder);
 
+        /**
+         * called when TreeNodes were toggle.
+         * @param isExpand the status of TreeNodes after being toggled.
+         */
         void onToggle(boolean isExpand, RecyclerView.ViewHolder holder);
     }
 
@@ -202,13 +207,13 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return displayNodes.size();
             }
 
-            // 判断是否是同一个 item
+            // judge if the same items
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
                 return TreeViewAdapter.this.areItemsTheSame(temp.get(oldItemPosition), displayNodes.get(newItemPosition));
             }
 
-            // 如果是同一个 item 判断内容是否相同
+            // if they are the same items, whether the contents has bean changed.
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                 return TreeViewAdapter.this.areContentsTheSame(temp.get(oldItemPosition), displayNodes.get(newItemPosition));
@@ -233,11 +238,13 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return diffBundle;
     }
 
+    // For DiffUtil, if they are the same items, whether the contents has bean changed.
     private boolean areContentsTheSame(TreeNode oldNode, TreeNode newNode) {
         return oldNode.getContent() != null && oldNode.getContent().equals(newNode.getContent())
                 && oldNode.isExpand() == newNode.isExpand();
     }
 
+    // judge if the same item for DiffUtil
     private boolean areItemsTheSame(TreeNode oldNode, TreeNode newNode) {
         return oldNode.getContent() != null && oldNode.getContent().equals(newNode.getContent());
     }

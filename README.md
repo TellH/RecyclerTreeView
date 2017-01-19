@@ -19,7 +19,7 @@ allprojects {
 app build.gradle
 ```groovy
 dependencies {
-    compile 'com.github.TellH:RecyclerTreeView:1.1.4'
+    compile 'com.github.TellH:RecyclerTreeView:1.2.0'
 }
 ```
 
@@ -118,6 +118,30 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
         );
         TreeViewAdapter adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
         rv.setAdapter(adapter);
+```
+
+- set TreeNodeListener to TreeViewAdapter
+
+```java
+        adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
+            @Override
+            public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
+                if (!node.isLeaf()) {
+                    //Update and toggle the node.
+                    onToggle(!node.isExpand(), holder);
+                }
+                return false;
+            }
+
+            @Override
+            public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
+                DirectoryNodeBinder.ViewHolder dirViewHolder = (DirectoryNodeBinder.ViewHolder) holder;
+                final ImageView ivArrow = dirViewHolder.getIvArrow();
+                int rotateDegree = isExpand ? 90 : -90;
+                ivArrow.animate().rotationBy(rotateDegree)
+                        .start();
+            }
+        });
 ```
 
 
