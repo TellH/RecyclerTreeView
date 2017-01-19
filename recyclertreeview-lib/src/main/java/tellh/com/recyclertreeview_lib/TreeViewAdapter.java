@@ -125,7 +125,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 addChildCount += addChildNodes(treeNode, startIndex + addChildCount);
             }
         }
-        pNode.toggle();
+        if (!pNode.isExpand())
+            pNode.toggle();
         return addChildCount;
     }
 

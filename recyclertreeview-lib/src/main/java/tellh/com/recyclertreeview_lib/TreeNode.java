@@ -68,6 +68,16 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
         return isExpand;
     }
 
+    public void collapse() {
+        if (!isExpand)
+            isExpand = false;
+    }
+
+    public void expand() {
+        if (isExpand)
+            isExpand = true;
+    }
+
     public boolean isExpand() {
         return isExpand;
     }

@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
         // whether collapse child nodes when their parent node was close.
-        adapter.ifCollapseChildWhileCollapseParent(true);
+//        adapter.ifCollapseChildWhileCollapseParent(true);
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
