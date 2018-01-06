@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 new TreeNode<>(new Dir("mipmap"))
                         .addChild(new TreeNode<>(new File("ic_launcher.png")))
         );
+        app.expandAll();
+
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
         // whether collapse child nodes when their parent node was close.
