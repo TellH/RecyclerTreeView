@@ -21,6 +21,7 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     public TreeNode(@NonNull T content) {
         this.content = content;
+        this.childList = new ArrayList<>();
     }
 
     public int getHeight() {
@@ -69,13 +70,33 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
     }
 
     public void collapse() {
-        if (!isExpand)
+        if (isExpand) {
             isExpand = false;
+        }
     }
 
+    public void collapseAll() {
+        if(childList == null || childList.isEmpty()) {
+            return;
+        }
+        for ( TreeNode child : this.childList) {
+            child.collapseAll();
+        }
+    }
     public void expand() {
-        if (isExpand)
+        if (!isExpand) {
             isExpand = true;
+        }
+    }
+
+    public void expandAll() {
+        expand();
+        if(childList == null || childList.isEmpty()) {
+            return;
+        }
+        for( TreeNode child : this.childList ) {
+            child.expandAll();
+        }
     }
 
     public boolean isExpand() {
