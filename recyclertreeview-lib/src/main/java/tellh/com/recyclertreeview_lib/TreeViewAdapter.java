@@ -103,6 +103,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return;
                 if (selectedNode.isLeaf())
                     return;
+                // This TreeNode was locked to click.
+                if (selectedNode.isLocked()) return;
                 boolean isExpand = selectedNode.isExpand();
                 int positionStart = displayNodes.indexOf(selectedNode) + 1;
                 if (!isExpand) {

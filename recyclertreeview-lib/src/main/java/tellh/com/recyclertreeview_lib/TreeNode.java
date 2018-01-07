@@ -14,6 +14,7 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
     private TreeNode parent;
     private List<TreeNode> childList;
     private boolean isExpand;
+    private boolean isLocked;
     //the tree high
     private int height = UNDEFINE;
 
@@ -53,7 +54,10 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
     }
 
     public void setChildList(List<TreeNode> childList) {
-        this.childList = childList;
+        this.childList.clear();
+        for (TreeNode treeNode : childList) {
+            addChild(treeNode);
+        }
     }
 
     public TreeNode addChild(TreeNode node) {
@@ -76,13 +80,14 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
     }
 
     public void collapseAll() {
-        if(childList == null || childList.isEmpty()) {
+        if (childList == null || childList.isEmpty()) {
             return;
         }
-        for ( TreeNode child : this.childList) {
+        for (TreeNode child : this.childList) {
             child.collapseAll();
         }
     }
+
     public void expand() {
         if (!isExpand) {
             isExpand = true;
@@ -91,10 +96,10 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     public void expandAll() {
         expand();
-        if(childList == null || childList.isEmpty()) {
+        if (childList == null || childList.isEmpty()) {
             return;
         }
-        for( TreeNode child : this.childList ) {
+        for (TreeNode child : this.childList) {
             child.expandAll();
         }
     }
@@ -109,6 +114,20 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     public TreeNode getParent() {
         return parent;
+    }
+
+    public TreeNode<T> lock() {
+        isLocked = true;
+        return this;
+    }
+
+    public TreeNode<T> unlock() {
+        isLocked = false;
+        return this;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
     }
 
     @Override

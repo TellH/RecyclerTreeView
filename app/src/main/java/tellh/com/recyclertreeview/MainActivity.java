@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         TreeNode<Dir> res = new TreeNode<>(new Dir("res"));
         nodes.add(res);
         res.addChild(
-                new TreeNode<>(new Dir("layout"))
+                new TreeNode<>(new Dir("layout")).lock() // lock this TreeNode
                         .addChild(new TreeNode<>(new File("activity_main.xml")))
                         .addChild(new TreeNode<>(new File("item_dir.xml")))
                         .addChild(new TreeNode<>(new File("item_file.xml")))
