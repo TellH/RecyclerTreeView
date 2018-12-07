@@ -1,29 +1,16 @@
-# RecyclerTreeView
-[![](https://jitpack.io/v/TellH/RecyclerTreeView.svg)](https://jitpack.io/#TellH/RecyclerTreeView)</br>
+# RecyclerTreeViewAndroidX
+
 TreeView implement in Android with RecyclerView..
+
+This is an update to AndroidX from the [original branch](https://github.com/TellH/RecyclerTreeView).
 
 ## Effect
 ![](https://raw.githubusercontent.com/TellH/RecyclerTreeView/master/raw/effect.gif)
 
 ## Usage
 ### Setup
-root build.gradle
-```groovy
-allprojects {
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
-```
-app build.gradle
-```groovy
-dependencies {
-    compile 'com.github.TellH:RecyclerTreeView:1.2.0'
-}
-```
 
-
+This section will be updated as soon as possible.
 
 ### Quick Start
 
@@ -147,3 +134,9 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
 
 
 Please check out the Demo and source code for more information. If you have any question, feel free to raise an issue. Thanks a lot!
+
+## Credits
+
+Thanks to [TellH](https://github.com/TellH) for developing (RecyclerTreeView)[https://github.com/TellH/RecyclerTreeView].
+
+This code is distributed under the [Apache License version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
