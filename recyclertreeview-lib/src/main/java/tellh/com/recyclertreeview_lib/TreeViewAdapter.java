@@ -23,6 +23,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<TreeNode> displayNodes;
     private int padding = 30;
     private OnTreeNodeListener onTreeNodeListener;
+    private OnLongClickListener mLongClickListener;
     private boolean toCollapseChild;
 
     public TreeViewAdapter(List<? extends TreeViewBinder> viewBinders) {
@@ -35,7 +36,9 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             findDisplayNodes(nodes);
         this.viewBinders = viewBinders;
     }
-
+    public void setLongClickListener(OnLongClickListener longClickListener) {
+        mLongClickListener = longClickListener;
+    }
     /**
      * 从nodes的结点中寻找展开了的非叶结点，添加到displayNodes中。
      *
@@ -84,11 +87,19 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             holder.itemView.setPaddingRelative(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }else {
             holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
+        }
+        if (mLongClickListener != null){
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return mLongClickListener.onLongClick(displayNodes.get(holder.getLayoutPosition()),holder);
+                }
+            });
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +202,10 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          */
         void onToggle(boolean isExpand, RecyclerView.ViewHolder holder);
     }
-
+    public interface OnLongClickListener{
+        //boolean onLongClick();
+        boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder);
+    }
     public void refresh(List<TreeNode> treeNodes) {
         displayNodes.clear();
         findDisplayNodes(treeNodes);
