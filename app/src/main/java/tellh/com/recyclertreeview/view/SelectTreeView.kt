@@ -1,4 +1,4 @@
-package tellh.com.recyclertreeview
+package tellh.com.recyclertreeview.view
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -7,11 +7,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.google.gson.Gson
 import com.nlinks.minielectric_helper_android.module.message.FileBinder
 import com.nlinks.minielectric_helper_android.module.message.FolderBinder
 import kotlinx.android.synthetic.main.layout_empty_list.view.*
 import kotlinx.android.synthetic.main.layout_select_view.view.*
+import tellh.com.recyclertreeview.R
 import tellh.com.recyclertreeview.bean.File
 import tellh.com.recyclertreeview.bean.Folder
 import tellh.com.recyclertreeview.util.UIUtils
@@ -33,7 +33,7 @@ class SelectTreeView(context: Context?, attrs: AttributeSet?) : LinearLayout(con
 
     private var filterView:View? = null
 
-    var filterListener:OnFilterListener? = null
+    var filterListener: OnFilterListener? = null
 
     init {
 

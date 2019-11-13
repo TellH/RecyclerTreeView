@@ -6,7 +6,7 @@
     android:orientation="vertical"
     >
 
-    <tellh.com.recyclertreeview.SelectTreeView
+    <tellh.com.recyclertreeview.view.SelectTreeView
         android:id="@+id/select_tree_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

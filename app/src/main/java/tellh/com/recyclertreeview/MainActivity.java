@@ -2,21 +2,13 @@ package tellh.com.recyclertreeview;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import tellh.com.recyclertreeview.bean.Folder;
-import tellh.com.recyclertreeview_lib.TreeNode;
-import tellh.com.recyclertreeview_lib.TreeViewAdapter;
+import tellh.com.recyclertreeview.view.SelectTreeView;
 
 public class MainActivity extends AppCompatActivity {
 

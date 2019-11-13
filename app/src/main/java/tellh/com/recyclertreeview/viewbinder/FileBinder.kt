@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import tellh.com.recyclertreeview.SelectTreeView
+import tellh.com.recyclertreeview.view.SelectTreeView
 import tellh.com.recyclertreeview.R
 import tellh.com.recyclertreeview.bean.File
 import tellh.com.recyclertreeview_lib.TreeNode
