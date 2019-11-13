@@ -27,7 +27,7 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     public int getHeight() {
         if (isRoot())
-            height = 0;
+            height = -1;
         else if (height == UNDEFINE)
             height = parent.getHeight() + 1;
         return height;
