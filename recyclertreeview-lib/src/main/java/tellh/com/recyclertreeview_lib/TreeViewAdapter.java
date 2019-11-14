@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +25,16 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int padding = 30;
     private OnTreeNodeListener onTreeNodeListener;
     private boolean toCollapseChild;
+
+    public int getCheckedPosition() {
+        return checkedPosition;
+    }
+
+    public void setCheckedPosition(int checkedPosition) {
+        this.checkedPosition = checkedPosition;
+    }
+
+    private int checkedPosition = Adapter.NO_SELECTION;
 
     public TreeViewAdapter(List<? extends TreeViewBinder> viewBinders) {
         this(null, viewBinders);
@@ -119,6 +130,17 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+
+                if (onTreeNodeListener != null && onTreeNodeListener.onLongClick(selectedNode, holder)) {
+                    return true;
+                }
+                return false;
+            }
+        });
         for (TreeViewBinder viewBinder : viewBinders) {
             if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId())
                 viewBinder.bindView(holder, position, displayNodes.get(position));
@@ -184,6 +206,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @return weather consume the click event.
          */
         boolean onClick(TreeNode node, RecyclerView.ViewHolder holder);
+
+        boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder);
 
         /**
          * called when TreeNodes were toggle.
