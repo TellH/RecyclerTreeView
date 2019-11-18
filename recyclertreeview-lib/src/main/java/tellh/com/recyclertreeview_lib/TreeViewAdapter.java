@@ -95,7 +95,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             holder.itemView.setPaddingRelative(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }else {
@@ -114,6 +114,11 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.itemView.setTag(System.currentTimeMillis());
                 }
                 holder.itemView.setTag(System.currentTimeMillis());
+
+                notifyItemChanged(checkedPosition);
+                checkedPosition = holder.getLayoutPosition();
+                notifyItemChanged(checkedPosition);
+                holder.itemView.setSelected(checkedPosition == position);
 
                 if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
                     return;
