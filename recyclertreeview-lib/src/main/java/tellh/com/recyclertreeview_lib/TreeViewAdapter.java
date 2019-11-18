@@ -101,6 +101,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }else {
             holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }
+        holder.itemView.setSelected(checkedPosition == position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,10 +116,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 holder.itemView.setTag(System.currentTimeMillis());
 
-                notifyItemChanged(checkedPosition);
-                checkedPosition = holder.getLayoutPosition();
-                notifyItemChanged(checkedPosition);
-                holder.itemView.setSelected(checkedPosition == position);
+                checkedPosition = position;
+
 
                 if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
                     return;
