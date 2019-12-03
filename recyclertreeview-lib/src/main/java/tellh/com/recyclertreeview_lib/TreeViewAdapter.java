@@ -221,9 +221,26 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void refresh(List<TreeNode> treeNodes) {
-        displayNodes.clear();
-        findDisplayNodes(treeNodes);
-        notifyDataSetChanged();
+        refresh(treeNodes, false);
+    }
+
+    public void refresh(List<TreeNode> treeNodes, boolean update) {
+        if (update) {
+
+            List<TreeNode> temp = backupDisplayNodes();
+            for (TreeNode node : treeNodes) {
+                if (!displayNodes.contains(node)) {
+                    displayNodes.add(node);
+                }
+            }
+            notifyDiff(temp);
+            notifyDataSetChanged();
+        } else {
+            displayNodes.clear();
+            findDisplayNodes(treeNodes);
+            notifyDataSetChanged();
+        }
+
     }
 
     public Iterator<TreeNode> getDisplayNodesIterator() {
