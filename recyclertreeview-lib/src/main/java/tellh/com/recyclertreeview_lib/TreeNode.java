@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TreeNode<T extends LayoutItemType> implements Cloneable {
     private T content;
+    private long id;
     private TreeNode parent;
     private List<TreeNode> childList;
     private boolean isExpand;
@@ -20,9 +21,10 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     private static final int UNDEFINE = -1;
 
-    public TreeNode(@NonNull T content) {
+    public TreeNode(@NonNull T content, long id) {
         this.content = content;
         this.childList = new ArrayList<>();
+        this.id = id;
     }
 
     public int getHeight() {
@@ -142,8 +144,13 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     @Override
     protected TreeNode<T> clone() throws CloneNotSupportedException {
-        TreeNode<T> clone = new TreeNode<>(this.content);
+        TreeNode<T> clone = new TreeNode<>(this.content, this.id);
         clone.isExpand = this.isExpand;
         return clone;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((TreeNode)obj).id;
     }
 }
