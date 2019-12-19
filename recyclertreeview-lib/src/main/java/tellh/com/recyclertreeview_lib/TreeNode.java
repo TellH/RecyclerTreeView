@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TreeNode<T extends LayoutItemType> implements Cloneable {
     private T content;
-    private long id;
+    private long compareId;
     private TreeNode parent;
     private List<TreeNode> childList;
     private boolean isExpand;
@@ -21,10 +21,13 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     private static final int UNDEFINE = -1;
 
-    public TreeNode(@NonNull T content, long id) {
+    public TreeNode(@NonNull T content) {
         this.content = content;
         this.childList = new ArrayList<>();
-        this.id = id;
+    }
+
+    public void setCompareId(long compareId) {
+        this.compareId = compareId;
     }
 
     public int getHeight() {
@@ -144,13 +147,13 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
 
     @Override
     protected TreeNode<T> clone() throws CloneNotSupportedException {
-        TreeNode<T> clone = new TreeNode<>(this.content, this.id);
+        TreeNode<T> clone = new TreeNode<>(this.content);
         clone.isExpand = this.isExpand;
         return clone;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return this.id == ((TreeNode)obj).id;
+        return this.compareId == ((TreeNode)obj).compareId;
     }
 }
