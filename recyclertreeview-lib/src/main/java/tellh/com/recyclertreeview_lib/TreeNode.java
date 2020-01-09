@@ -30,6 +30,10 @@ public class TreeNode<T extends LayoutItemType> implements Cloneable {
         this.compareId = compareId;
     }
 
+    public long getCompareId() {
+        return compareId;
+    }
+
     public int getHeight() {
         if (isRoot())
             height = 0;

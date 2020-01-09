@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -365,6 +366,30 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
         notifyDiff(temp);
+    }
+
+    public boolean isNodeDisplayed(TreeNode<? extends  TreeNode> node) {
+        return displayNodes.contains(node);
+    }
+
+    public void updateDisplayedNode(TreeNode<? extends TreeNode> node) {
+        notifyItemChanged(displayNodes.indexOf(node));
+    }
+
+    public List<? extends TreeNode> getAllDisplayedNodes() {
+        return displayNodes;
+    }
+
+    public TreeNode<? extends TreeNode> getNode(long id) {
+        TreeNode<? extends TreeNode> node = null;
+        for (TreeNode treeNode : displayNodes) {
+            if (treeNode.getCompareId() == id) {
+                node = treeNode;
+                break;
+            }
+        }
+
+        return node;
     }
 
 }
