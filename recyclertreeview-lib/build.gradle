@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 group='com.github.tellh'
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 14
