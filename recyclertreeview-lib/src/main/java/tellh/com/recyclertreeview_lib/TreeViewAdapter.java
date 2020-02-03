@@ -55,7 +55,9 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     private void findDisplayNodes(List<TreeNode> nodes) {
         for (TreeNode node : nodes) {
-            displayNodes.add(node);
+            if (!displayNodes.contains(node)) {
+                displayNodes.add(node);
+            }
             if (!node.isLeaf() && node.isExpand())
                 findDisplayNodes(node.getChildList());
         }
@@ -229,11 +231,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (update) {
 
             List<TreeNode> temp = backupDisplayNodes();
-            for (TreeNode node : treeNodes) {
-                if (!displayNodes.contains(node)) {
-                    displayNodes.add(node);
-                }
-            }
+            findDisplayNodes(treeNodes);
             notifyDiff(temp);
             notifyDataSetChanged();
         } else {
