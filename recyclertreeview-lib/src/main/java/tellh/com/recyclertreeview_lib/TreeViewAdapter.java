@@ -228,17 +228,15 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void refresh(List<TreeNode> treeNodes, boolean update) {
+        List<TreeNode> temp = backupDisplayNodes();
         if (update) {
-
-            List<TreeNode> temp = backupDisplayNodes();
             findDisplayNodes(treeNodes);
             notifyDiff(temp);
-            notifyDataSetChanged();
         } else {
             displayNodes.clear();
             findDisplayNodes(treeNodes);
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
 
     }
 
