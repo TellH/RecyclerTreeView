@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +26,16 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int padding = 30;
     private OnTreeNodeListener onTreeNodeListener;
     private boolean toCollapseChild;
+
+    public int getCheckedPosition() {
+        return checkedPosition;
+    }
+
+    public void setCheckedPosition(int checkedPosition) {
+        this.checkedPosition = checkedPosition;
+    }
+
+    private int checkedPosition = Adapter.NO_SELECTION;
 
     public TreeViewAdapter(List<? extends TreeViewBinder> viewBinders) {
         this(null, viewBinders);
@@ -43,7 +55,9 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     private void findDisplayNodes(List<TreeNode> nodes) {
         for (TreeNode node : nodes) {
-            displayNodes.add(node);
+            if (!displayNodes.contains(node)) {
+                displayNodes.add(node);
+            }
             if (!node.isLeaf() && node.isExpand())
                 findDisplayNodes(node.getChildList());
         }
@@ -84,12 +98,13 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             holder.itemView.setPaddingRelative(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }else {
             holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }
+        holder.itemView.setSelected(checkedPosition == position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +119,9 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 holder.itemView.setTag(System.currentTimeMillis());
 
+                checkedPosition = position;
+
+
                 if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
                     return;
                 if (selectedNode.isLeaf())
@@ -117,6 +135,17 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
                 }
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+
+                if (onTreeNodeListener != null && onTreeNodeListener.onLongClick(selectedNode, holder)) {
+                    return true;
+                }
+                return false;
             }
         });
         for (TreeViewBinder viewBinder : viewBinders) {
@@ -185,6 +214,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          */
         boolean onClick(TreeNode node, RecyclerView.ViewHolder holder);
 
+        boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder);
+
         /**
          * called when TreeNodes were toggle.
          * @param isExpand the status of TreeNodes after being toggled.
@@ -193,9 +224,20 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void refresh(List<TreeNode> treeNodes) {
-        displayNodes.clear();
-        findDisplayNodes(treeNodes);
+        refresh(treeNodes, false);
+    }
+
+    public void refresh(List<TreeNode> treeNodes, boolean update) {
+        List<TreeNode> temp = backupDisplayNodes();
+        if (update) {
+            findDisplayNodes(treeNodes);
+            notifyDiff(temp);
+        } else {
+            displayNodes.clear();
+            findDisplayNodes(treeNodes);
+        }
         notifyDataSetChanged();
+
     }
 
     public Iterator<TreeNode> getDisplayNodesIterator() {
@@ -320,6 +362,30 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
         notifyDiff(temp);
+    }
+
+    public boolean isNodeDisplayed(TreeNode<? extends  TreeNode> node) {
+        return displayNodes.contains(node);
+    }
+
+    public void updateDisplayedNode(TreeNode<? extends TreeNode> node) {
+        notifyItemChanged(displayNodes.indexOf(node));
+    }
+
+    public List<? extends TreeNode> getAllDisplayedNodes() {
+        return displayNodes;
+    }
+
+    public TreeNode<? extends TreeNode> getNode(long id) {
+        TreeNode<? extends TreeNode> node = null;
+        for (TreeNode treeNode : displayNodes) {
+            if (treeNode.getCompareId() == id) {
+                node = treeNode;
+                break;
+            }
+        }
+
+        return node;
     }
 
 }

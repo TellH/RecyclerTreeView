@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
                 int rotateDegree = isExpand ? 90 : -90;
                 ivArrow.animate().rotationBy(rotateDegree)
                         .start();
+            }
+
+            @Override
+            public boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder) {
+                Toast.makeText(getApplicationContext(), "Long Clicked", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
         rv.setAdapter(adapter);
