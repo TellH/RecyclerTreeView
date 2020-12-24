@@ -1,5 +1,6 @@
 package tellh.com.recyclertreeview_lib;
 
+import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -119,6 +120,17 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+                if (onTreeNodeListener != null && onTreeNodeListener.onLongClick(selectedNode, holder))
+                    return true;
+                return false;
+            }
+        });
+
         for (TreeViewBinder viewBinder : viewBinders) {
             if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId())
                 viewBinder.bindView(holder, position, displayNodes.get(position));
@@ -190,6 +202,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param isExpand the status of TreeNodes after being toggled.
          */
         void onToggle(boolean isExpand, RecyclerView.ViewHolder holder);
+
+        boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder);
     }
 
     public void refresh(List<TreeNode> treeNodes) {
