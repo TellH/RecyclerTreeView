@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +91,25 @@ public class MainActivity extends AppCompatActivity {
                 int rotateDegree = isExpand ? 90 : -90;
                 ivArrow.animate().rotationBy(rotateDegree)
                         .start();
+            }
+
+            @Override
+            public boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder) {
+                if (!node.isLeaf()) {
+                    //read name of dir
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Long clicked: "+((Dir) node.getContent()).dirName,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Long clicked: "+ ((File) node.getContent()).fileName,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+                return true;
             }
         });
         rv.setAdapter(adapter);
