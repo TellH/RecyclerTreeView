@@ -5,5 +5,9 @@ package tellh.com.recyclertreeview_lib;
  */
 
 public interface LayoutItemType {
+    int NO_TOGGLE_ATTACHED = -99;
+
     int getLayoutId();
+
+    int getToggleViewId();
 }

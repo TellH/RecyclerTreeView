@@ -19,7 +19,7 @@ allprojects {
 app build.gradle
 ```groovy
 dependencies {
-    compile 'com.github.TellH:RecyclerTreeView:1.2.0'
+    implementation 'com.github.TellH:RecyclerTreeView:1.2.0'
 }
 ```
 

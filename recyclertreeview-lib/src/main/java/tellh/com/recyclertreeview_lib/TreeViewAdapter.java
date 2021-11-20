@@ -2,13 +2,14 @@ package tellh.com.recyclertreeview_lib;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -87,38 +88,46 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             holder.itemView.setPaddingRelative(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
-        }else {
+        } else {
             holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
-                // Prevent multi-click during the short interval.
-                try {
-                    long lastClickTime = (long) holder.itemView.getTag();
-                    if (System.currentTimeMillis() - lastClickTime < 500)
-                        return;
-                } catch (Exception e) {
+        int toggleViewId = LayoutItemType.NO_TOGGLE_ATTACHED;
+        try {
+            toggleViewId = displayNodes.get(position).getContent().getToggleViewId();
+        } catch (Exception ignored) {
+        }
+        if (toggleViewId != LayoutItemType.NO_TOGGLE_ATTACHED)
+            holder.itemView.findViewById(toggleViewId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+                    // Prevent multi-click during the short interval.
+                    try {
+                        long lastClickTime = (long) holder.itemView.getTag();
+                        if (System.currentTimeMillis() - lastClickTime < 500)
+                            return;
+                    } catch (Exception e) {
+                        holder.itemView.setTag(System.currentTimeMillis());
+                    }
                     holder.itemView.setTag(System.currentTimeMillis());
-                }
-                holder.itemView.setTag(System.currentTimeMillis());
 
-                if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
-                    return;
-                if (selectedNode.isLeaf())
-                    return;
-                // This TreeNode was locked to click.
-                if (selectedNode.isLocked()) return;
-                boolean isExpand = selectedNode.isExpand();
-                int positionStart = displayNodes.indexOf(selectedNode) + 1;
-                if (!isExpand) {
-                    notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
-                } else {
-                    notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
+                    if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
+                        return;
+                    if (selectedNode.isLeaf())
+                        return;
+                    // This TreeNode was locked to click.
+                    if (selectedNode.isLocked()) return;
+                    boolean isExpand = selectedNode.isExpand();
+                    int positionStart = displayNodes.indexOf(selectedNode) + 1;
+                    if (!isExpand) {
+                        notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
+                    } else {
+                        notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
+                    }
+                    if (onTreeNodeListener != null)
+                        onTreeNodeListener.onToggle(!selectedNode.isExpand(), holder);
                 }
-            }
-        });
+            });
         for (TreeViewBinder viewBinder : viewBinders) {
             if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId())
                 viewBinder.bindView(holder, position, displayNodes.get(position));
@@ -181,12 +190,14 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface OnTreeNodeListener {
         /**
          * called when TreeNodes were clicked.
+         *
          * @return weather consume the click event.
          */
         boolean onClick(TreeNode node, RecyclerView.ViewHolder holder);
 
         /**
          * called when TreeNodes were toggle.
+         *
          * @param isExpand the status of TreeNodes after being toggled.
          */
         void onToggle(boolean isExpand, RecyclerView.ViewHolder holder);
