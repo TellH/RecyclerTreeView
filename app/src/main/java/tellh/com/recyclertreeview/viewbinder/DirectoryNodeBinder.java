@@ -37,6 +37,11 @@ public class DirectoryNodeBinder extends TreeViewBinder<DirectoryNodeBinder.View
         return R.layout.item_dir;
     }
 
+    @Override
+    public int getToggleViewId() {
+        return R.id.iv_arrow;
+    }
+
     public static class ViewHolder extends TreeViewBinder.ViewHolder {
         private ImageView ivArrow;
         private TextView tvName;

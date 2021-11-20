@@ -18,4 +18,9 @@ public class File implements LayoutItemType {
     public int getLayoutId() {
         return R.layout.item_file;
     }
+
+    @Override
+    public int getToggleViewId() {
+        return NO_TOGGLE_ATTACHED;
+    }
 }

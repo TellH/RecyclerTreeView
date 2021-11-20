@@ -29,6 +29,11 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
         return R.layout.item_file;
     }
 
+    @Override
+    public int getToggleViewId() {
+        return NO_TOGGLE_ATTACHED;
+    }
+
     public class ViewHolder extends TreeViewBinder.ViewHolder {
         public TextView tvName;
 

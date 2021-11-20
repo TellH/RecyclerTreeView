@@ -18,4 +18,9 @@ public class Dir implements LayoutItemType {
     public int getLayoutId() {
         return R.layout.item_dir;
     }
+
+    @Override
+    public int getToggleViewId() {
+        return R.id.iv_arrow;
+    }
 }
