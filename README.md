@@ -27,7 +27,9 @@ dependencies {
 
 ### Quick Start
 
-- Create a Java bean class and  implement the LayoutItemType, to attach item layout id to it.
+- Create a Java bean class and  implement the LayoutItemType 
+- Attach item layout id to it.
+- Attach toggle view id to it. (also you can stop toggle entirely or use the full view as toggle)
 
 ```java
 public class Dir implements LayoutItemType {
@@ -41,12 +43,18 @@ public class Dir implements LayoutItemType {
     public int getLayoutId() {
         return R.layout.item_dir;
     }
+
+    @Override
+    public int getToggleViewId() {
+        return R.id.iv_arrow;
+    }
 }
 ```
 
 
 
 - Create a ViewBinder to bind view with the data bean. As you see, `provideViewHolder(View itemView)` corresponds for `onCreateViewHolder` in RecyclerView, and `bindView` corresponds for `onBindViewHolder` in RecyclerView. 
+- For safety, follow the same ids provided the bean files.
 
 ```java
 public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
@@ -64,6 +72,11 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
     @Override
     public int getLayoutId() {
         return R.layout.item_file;
+    }
+
+    @Override
+    public int getToggleViewId() {
+        return NO_TOGGLE_ATTACHED;
     }
 
     public class ViewHolder extends TreeViewBinder.ViewHolder {
@@ -128,7 +141,7 @@ public class FileNodeBinder extends TreeViewBinder<FileNodeBinder.ViewHolder> {
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
                 if (!node.isLeaf()) {
                     //Update and toggle the node.
-                    onToggle(!node.isExpand(), holder);
+                    //onToggle(!node.isExpand(), holder); onToggle is now called automatically
                 }
                 return false;
             }

@@ -96,37 +96,39 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             toggleViewId = displayNodes.get(position).getContent().getToggleViewId();
         } catch (Exception ignored) {
         }
+        holder.itemView.setOnClickListener(v -> {
+            TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+            if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
+                return;
+        });
         if (toggleViewId != LayoutItemType.NO_TOGGLE_ATTACHED)
-            holder.itemView.findViewById(toggleViewId).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
-                    // Prevent multi-click during the short interval.
-                    try {
-                        long lastClickTime = (long) holder.itemView.getTag();
-                        if (System.currentTimeMillis() - lastClickTime < 500)
-                            return;
-                    } catch (Exception e) {
-                        holder.itemView.setTag(System.currentTimeMillis());
-                    }
+            (toggleViewId == LayoutItemType.ATTACH_FULL_VIEW_AS_TOGGLE ? holder.itemView : holder.itemView.findViewById(toggleViewId)).setOnClickListener(v -> {
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+                // Prevent multi-click during the short interval.
+                try {
+                    long lastClickTime = (long) holder.itemView.getTag();
+                    if (System.currentTimeMillis() - lastClickTime < 500)
+                        return;
+                } catch (Exception e) {
                     holder.itemView.setTag(System.currentTimeMillis());
-
-                    if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
-                        return;
-                    if (selectedNode.isLeaf())
-                        return;
-                    // This TreeNode was locked to click.
-                    if (selectedNode.isLocked()) return;
-                    boolean isExpand = selectedNode.isExpand();
-                    int positionStart = displayNodes.indexOf(selectedNode) + 1;
-                    if (!isExpand) {
-                        notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
-                    } else {
-                        notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
-                    }
-                    if (onTreeNodeListener != null)
-                        onTreeNodeListener.onToggle(!selectedNode.isExpand(), holder);
                 }
+                holder.itemView.setTag(System.currentTimeMillis());
+
+                /*if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
+                    return;*/
+                if (selectedNode.isLeaf())
+                    return;
+                // This TreeNode was locked to click.
+                if (selectedNode.isLocked()) return;
+                boolean isExpand = selectedNode.isExpand();
+                int positionStart = displayNodes.indexOf(selectedNode) + 1;
+                if (!isExpand) {
+                    notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
+                } else {
+                    notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
+                }
+                if (onTreeNodeListener != null)
+                    onTreeNodeListener.onToggle(!selectedNode.isExpand(), holder);
             });
         for (TreeViewBinder viewBinder : viewBinders) {
             if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId())
